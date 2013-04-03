@@ -1,0 +1,89 @@
+<html>
+<head>
+    <style>
+        .content {
+            overflow: hidden; width: 300px; height: 300px; background: #ededed;
+        }
+        .scroll-container {
+            position: absolute;
+            top: 0;
+            left: 350px;
+            width: 15px;
+            height: 300px;
+            background: #efefef;
+        }
+        .scroll-bar {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 15px;
+            height: 30px;
+            background: #999;
+        }
+        .scroll-bar > .scroll-top{
+            position: absolute;
+            left: 0px;
+            top: 1px;
+            bottom: 10px;
+            width: 100%;
+            background: url('scroll-top.png') no-repeat center top;
+        }
+        .scroll-bar > .scroll-bottom{
+            position: absolute;
+            left: 0px;
+            bottom: 0px;
+            height: 10px;
+            width: 100%;
+            background: url('scroll-top.png') no-repeat center bottom;
+        }
+    </style>
+    <script src="jquery.js"></script>
+    <script src="jquery.mousewheel.js"></script>
+    <script src="mwheelintent.js"></script>
+    <script src="scroller.js"></script>
+    <script src="knockout.js"></script>
+    <script>
+        ko.bindingHandlers.scroll = {
+            counter: 0,
+            scrollers: [],
+            init: function(element,valueAccessor) {
+                var element_id = "scroller"+ko.bindingHandlers.scroll.counter;
+                $(element).after('<div class="scroll-container" id="'+element_id+'"><div class="scroll-bar"><div class="scroll-top"></div><div class="scroll-bottom"></div></div></div>');
+                ko.bindingHandlers.scroll.scrollers[ko.bindingHandlers.scroll.counter] = new Scroller($(element),$("#"+element_id));
+                ko.bindingHandlers.scroll.counter++;
+            },
+            update: function(element,valueAccessor) {
+                var va = ko.utils.unwrapObservable(valueAccessor());
+                if(va) {
+                    var scroll_id = $(element).next().attr("id").replace( /^\D+/g, '');
+                    console.log(scroll_id);
+                    var scroller = ko.bindingHandlers.scroll.scrollers[scroll_id];
+                    scroller.refresh();
+                }
+            }
+        };
+        
+        VM = {
+            updateScroll: ko.observable(true).extend({notify: 'always'})
+        }
+            
+        $(function() {
+            ko.applyBindings(VM);
+        });
+    </script>
+</head>
+<body>
+    <div class="content" data-bind="scroll: updateScroll">
+        Mussum ipsum cacilds, vidis litro abertis. Consetis adipiscings elitis.<br/>
+        Pra lá , depois divoltis porris, paradis. Paisis, filhis, espiritis santis.<br/> 
+        Mé faiz elementum girarzis, nisi eros vermeio, in elementis mé pra quem é amistosis quis leo.<br/>
+        Manduma pindureta quium dia nois paga. Sapien in monti palavris qui num significa nadis i pareci latim.<br/>
+        Interessantiss quisso pudia ce receita de bolis, mais bolis eu num gostis.<br/>
+        Mussum ipsum cacilds, vidis litro abertis. Consetis adipiscings elitis.<br/>
+        Pra lá , depois divoltis porris, paradis. Paisis, filhis, espiritis santis.<br/> 
+        Mé faiz elementum girarzis, nisi eros vermeio, in elementis mé pra quem é amistosis quis leo.<br/>
+        Manduma pindureta quium dia nois paga. Sapien in monti palavris qui num significa nadis i pareci latim.<br/>
+        Interessantiss quisso pudia ce receita de bolis, mais bolis eu num gostis.<br/>
+    </div>
+</body>
+</html>
